@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "107481852070",
+    "project_id": "menotes-bc8f8",
+    "storage_bucket": "menotes-bc8f8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:107481852070:android:30f84733a97677cb562c67",
+        "android_client_info": {
+          "package_name": "com.yoop.mynotes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "107481852070-stpmq7g09va221qtiru2b8onpejvunkr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZGfYgpdB5Ojv9UJWpcFMkCe0K2lq_QdA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "107481852070-stpmq7g09va221qtiru2b8onpejvunkr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
