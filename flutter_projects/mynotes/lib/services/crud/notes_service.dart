@@ -9,14 +9,19 @@ class NotesService {
   Database? _db;
   DatabaseUser? _user;
 
+  //singleton
   static final NotesService _shared = NotesService._sharedInstance();
-  NotesService._sharedInstance();
+  NotesService._sharedInstance() {
+    _notesStreamController = StreamController<List<DatabaseNotes>>.broadcast(
+      onListen: () {
+        _notesStreamController.sink.add(_notes);
+      },
+    );
+  }
   factory NotesService() => _shared;
 
   List<DatabaseNotes> _notes = []; //declare empty list called _notes
-
-  final _notesStreamController =
-      StreamController<List<DatabaseNotes>>.broadcast();
+  late final StreamController<List<DatabaseNotes>> _notesStreamController;
 
   Stream<List<DatabaseNotes>> get allNotes => _notesStreamController.stream;
 
@@ -304,7 +309,7 @@ class DatabaseNotes {
 
   @override
   String toString() =>
-      'Notes, ID = $id, user_id = $userId, is_synced_with_cloud = $isSyncedWithCloud';
+      'Notes, ID = $id, user_id = $userId, is_synced_with_cloud = $isSyncedWithCloud, text = $text';
 
   @override
   bool operator ==(covariant DatabaseNotes other) => id == other.id;
