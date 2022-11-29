@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'package:mynotes/extensions/list/filter.dart';
 import 'package:mynotes/services/crud/crud_exceptions.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
@@ -23,7 +24,15 @@ class NotesService {
   List<DatabaseNotes> _notes = []; //declare empty list called _notes
   late final StreamController<List<DatabaseNotes>> _notesStreamController;
 
-  Stream<List<DatabaseNotes>> get allNotes => _notesStreamController.stream;
+  Stream<List<DatabaseNotes>> get allNotes =>
+      _notesStreamController.stream.filter((note) {
+        final currentUser = _user;
+        if (currentUser != null) {
+          return note.userId == currentUser.id;
+        } else {
+          throw UserShouldBeSetBeforeReadingAllNotes();
+        }
+      });
 
   Future<void> _ensureDbIsOpen() async {
     try {
@@ -69,10 +78,14 @@ class NotesService {
     final db = _getDatabseOrThrow();
     //make sure note exists
     getNote(id: note.id);
-    final updatesCount = await db.update(notesTable, {
-      textColumn: text,
-      isSyncedwithCloudColumn: 0,
-    });
+    final updatesCount = await db.update(
+        notesTable,
+        {
+          textColumn: text,
+          isSyncedwithCloudColumn: 0,
+        },
+        where: 'id = ?',
+        whereArgs: [note.id]);
 
     if (updatesCount == 0) {
       throw CouldNotUpdateNote();
