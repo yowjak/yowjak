@@ -1,34 +1,47 @@
 import 'package:flutter/cupertino.dart';
 import 'package:mynotes/services/auth/auth_user.dart';
+import 'package:equatable/equatable.dart';
 
 @immutable
 abstract class AuthState {
-  const AuthState();
+  final bool isLoading;
+  final String? loadingText;
+  const AuthState({
+    required this.isLoading,
+    this.loadingText = 'Please wait a moment',
+  });
 }
 
-class AuthStateLoading extends AuthState {
-  const AuthStateLoading();
+class AuthStateUninitialized extends AuthState {
+  const AuthStateUninitialized({required bool isLoading})
+      : super(isLoading: isLoading);
+}
+
+class AuthStateRegistering extends AuthState {
+  final Exception? exception;
+  const AuthStateRegistering({required bool isLoading, required this.exception})
+      : super(isLoading: isLoading);
 }
 
 class AuthStateLoggedIn extends AuthState {
   final AuthUser user;
-  const AuthStateLoggedIn(this.user);
-}
-
-class AuthStateLoggedInFailure extends AuthState {
-  final Exception exception;
-  const AuthStateLoggedInFailure(this.exception);
+  const AuthStateLoggedIn({required this.user, required bool isLoading})
+      : super(isLoading: isLoading);
 }
 
 class AuthStateNeedsVerification extends AuthState {
-  const AuthStateNeedsVerification();
+  const AuthStateNeedsVerification({required bool isLoading})
+      : super(isLoading: isLoading);
 }
 
-class AuthStateLoggedOut extends AuthState {
-  const AuthStateLoggedOut();
-}
+class AuthStateLoggedOut extends AuthState with EquatableMixin {
+  final Exception? exception;
+  const AuthStateLoggedOut({
+    required this.exception,
+    required bool isLoading,
+    String? loadingText,
+  }) : super(isLoading: isLoading, loadingText: loadingText);
 
-class AuthStateLoggedOutFailure extends AuthState {
-  final Exception exception;
-  const AuthStateLoggedOutFailure(this.exception);
+  @override
+  List<Object?> get props => [exception, isLoading];
 }
